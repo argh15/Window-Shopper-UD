@@ -11,10 +11,13 @@ class MainVC: UIViewController {
 
     @IBOutlet weak var wageTextField: CustomTextField!
     @IBOutlet weak var priceTextField: CustomTextField!
+    @IBOutlet weak var resultLabel: UILabel!
+    @IBOutlet weak var hoursLabel: UILabel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         createCalculateButton()
+        handleVisibility(showButton: false)
     }
     
     func createCalculateButton() {
@@ -26,10 +29,28 @@ class MainVC: UIViewController {
         
         wageTextField.inputAccessoryView = calcBtn
         priceTextField.inputAccessoryView = calcBtn
+        
     }
     
     @objc func performCalculation() {
-        print("Here!")
+        if let wageText = wageTextField.text, let priceText = priceTextField.text {
+            if let wage = Double(wageText), let price = Double(priceText) {
+                resultLabel.text = "\(Wage.getHours(forWage: wage, andPrice: price))"
+                view.endEditing(true)
+                handleVisibility(showButton: true)
+            }
+        }
+    }
+    
+    func handleVisibility(showButton val: Bool) {
+        resultLabel.isHidden = !val
+        hoursLabel.isHidden = !val
+    }
+    
+    @IBAction func clearCalcBtnAction(_ sender: Any) {
+        handleVisibility(showButton: false)
+        wageTextField.text = ""
+        priceTextField.text = ""
     }
 }
 
